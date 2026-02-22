@@ -1,0 +1,93 @@
+﻿generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  ADMIN
+  MEMBER
+}
+
+enum ExecutionStatus {
+  PENDING
+  RUNNING
+  SUCCESS
+  FAILED
+}
+
+model Organization {
+  id         String              @id @default(cuid())
+  name       String
+  slug       String              @unique
+  createdAt  DateTime            @default(now())
+  updatedAt  DateTime            @updatedAt
+  users      User[]
+  workflows  Workflow[]
+  executions WorkflowExecution[]
+  @@index([name])
+}
+
+model User {
+  id               String       @id @default(cuid())
+  email            String       @unique
+  name             String
+  passwordHash     String
+  role             Role         @default(MEMBER)
+  refreshTokenHash String?
+  organizationId   String
+  createdAt        DateTime     @default(now())
+  updatedAt        DateTime     @updatedAt
+  organization     Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  workflowsCreated Workflow[]   @relation("WorkflowCreatedBy")
+  @@index([organizationId])
+  @@index([organizationId, role])
+}
+
+model Workflow {
+  id             String              @id @default(cuid())
+  name           String
+  definition     Json
+  organizationId String
+  createdById    String
+  createdAt      DateTime            @default(now())
+  updatedAt      DateTime            @updatedAt
+  organization   Organization        @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  createdBy      User                @relation("WorkflowCreatedBy", fields: [createdById], references: [id], onDelete: Restrict)
+  executions     WorkflowExecution[]
+  @@index([organizationId])
+  @@index([organizationId, createdAt])
+}
+
+model WorkflowExecution {
+  id             String          @id @default(cuid())
+  workflowId     String
+  organizationId String
+  status         ExecutionStatus @default(PENDING)
+  startedAt      DateTime?
+  finishedAt     DateTime?
+  createdAt      DateTime        @default(now())
+  updatedAt      DateTime        @updatedAt
+  workflow       Workflow        @relation(fields: [workflowId], references: [id], onDelete: Cascade)
+  organization   Organization    @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  logs           ExecutionLog[]
+  @@index([organizationId])
+  @@index([workflowId])
+  @@index([organizationId, status])
+}
+
+model ExecutionLog {
+  id          String            @id @default(cuid())
+  executionId String
+  stepName    String
+  message     String
+  status      ExecutionStatus
+  metadata    Json?
+  createdAt   DateTime          @default(now())
+  execution   WorkflowExecution @relation(fields: [executionId], references: [id], onDelete: Cascade)
+  @@index([executionId])
+  @@index([status])
+}

@@ -1,0 +1,9 @@
+﻿node_modules
+.env
+.env.*
+backend/node_modules
+frontend/node_modules
+backend/dist
+backend/.nestjs
+frontend/.next
+backend/prisma/migrations
