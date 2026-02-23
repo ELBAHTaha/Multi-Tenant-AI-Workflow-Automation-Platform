@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import { useMemo } from 'react';
 import ReactFlow, { Background, Controls, MiniMap, Node, Edge } from 'reactflow';
@@ -10,7 +10,7 @@ const nodes: Node[] = [
 ];
 const edges: Edge[] = [{ id: 'e1-2', source: '1', target: '2' }];
 
-export function WorkflowBuilderPlaceholder(): JSX.Element {
+export function WorkflowBuilderPlaceholder() {
   const preparedNodes = useMemo(() => nodes, []);
   const preparedEdges = useMemo(() => edges, []);
   return (
@@ -26,3 +26,4 @@ export function WorkflowBuilderPlaceholder(): JSX.Element {
     </div>
   );
 }
+

@@ -1,4 +1,13 @@
-import { IsNotEmpty, IsObject, IsString } from 'class-validator';
+import { Type } from 'class-transformer';
+import { IsArray, IsNotEmpty, IsObject, IsString, ValidateNested } from 'class-validator';
+
+class WorkflowDefinitionDto {
+  @IsArray()
+  nodes!: Array<Record<string, unknown>>;
+
+  @IsArray()
+  edges!: Array<Record<string, unknown>>;
+}
 
 export class CreateWorkflowDto {
   @IsString()
@@ -6,8 +15,7 @@ export class CreateWorkflowDto {
   name!: string;
 
   @IsObject()
-  definition!: {
-    nodes: Array<Record<string, unknown>>;
-    edges: Array<Record<string, unknown>>;
-  };
+  @ValidateNested()
+  @Type(() => WorkflowDefinitionDto)
+  definition!: WorkflowDefinitionDto;
 }

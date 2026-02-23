@@ -9,13 +9,14 @@ datasource db {
 
 enum Role {
   ADMIN
+  MANAGER
   MEMBER
 }
 
 enum ExecutionStatus {
   PENDING
   RUNNING
-  SUCCESS
+  COMPLETED
   FAILED
 }
 
@@ -28,6 +29,7 @@ model Organization {
   users      User[]
   workflows  Workflow[]
   executions WorkflowExecution[]
+  auditLogs  AuditLog[]
 
   @@index([name])
 }
@@ -45,6 +47,7 @@ model User {
 
   organization     Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
   workflowsCreated Workflow[]   @relation("WorkflowCreatedBy")
+  auditLogs        AuditLog[]
 
   @@index([organizationId])
   @@index([organizationId, role])
@@ -99,4 +102,20 @@ model ExecutionLog {
 
   @@index([executionId])
   @@index([status])
+}
+
+model AuditLog {
+  id             String       @id @default(cuid())
+  organizationId String
+  userId         String
+  action         String
+  metadata       Json?
+  createdAt      DateTime     @default(now())
+
+  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  user           User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([organizationId, createdAt])
+  @@index([userId, createdAt])
+  @@index([action])
 }

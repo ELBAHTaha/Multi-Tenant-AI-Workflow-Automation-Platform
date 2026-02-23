@@ -17,7 +17,14 @@ export class WorkflowGateway implements OnGatewayConnection, OnGatewayDisconnect
     client.emit('joinedOrganization', { organizationId: payload.organizationId });
   }
 
-  emitExecutionUpdate(organizationId: string, payload: { executionId: string; workflowId: string; status: 'PENDING' | 'RUNNING' | 'SUCCESS' | 'FAILED' }): void {
+  emitExecutionUpdate(
+    organizationId: string,
+    payload: {
+      executionId: string;
+      workflowId: string;
+      status: 'PENDING' | 'RUNNING' | 'COMPLETED' | 'FAILED';
+    },
+  ): void {
     this.server.to(organizationId).emit('workflowExecutionStatus', payload);
   }
 }

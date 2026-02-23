@@ -1,6 +1,7 @@
 'use client';
 
 import { create } from 'zustand';
+import { createJSONStorage, persist } from 'zustand/middleware';
 
 interface AuthState {
   accessToken: string | null;
@@ -9,9 +10,17 @@ interface AuthState {
   clear: () => void;
 }
 
-export const useAuthStore = create<AuthState>((set) => ({
-  accessToken: null,
-  refreshToken: null,
-  setTokens: (accessToken, refreshToken) => set({ accessToken, refreshToken }),
-  clear: () => set({ accessToken: null, refreshToken: null }),
-}));
+export const useAuthStore = create<AuthState>()(
+  persist(
+    (set) => ({
+      accessToken: null,
+      refreshToken: null,
+      setTokens: (accessToken, refreshToken) => set({ accessToken, refreshToken }),
+      clear: () => set({ accessToken: null, refreshToken: null }),
+    }),
+    {
+      name: 'auth-store',
+      storage: createJSONStorage(() => localStorage),
+    },
+  ),
+);

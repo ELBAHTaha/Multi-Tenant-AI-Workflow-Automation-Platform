@@ -1,15 +1,19 @@
-import type { Metadata } from 'next';
+﻿import type { Metadata } from 'next';
 import './globals.css';
+import { AuthProvider } from '../context/auth-provider';
 
 export const metadata: Metadata = {
   title: 'AI Workflow SaaS',
   description: 'Multi-tenant workflow automation platform',
 };
 
-export default function RootLayout({ children }: { children: React.ReactNode }): JSX.Element {
+export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en">
-      <body>{children}</body>
+      <body>
+        <AuthProvider>{children}</AuthProvider>
+      </body>
     </html>
   );
 }
+

@@ -1,8 +1,22 @@
 import { api } from '../lib/api';
 
-interface RegisterPayload { name: string; email: string; password: string; organizationName: string; }
-interface LoginPayload { email: string; password: string; }
-interface AuthResponse { userId: string; accessToken: string; refreshToken: string; }
+export interface RegisterPayload {
+  name: string;
+  email: string;
+  password: string;
+  organizationName: string;
+}
+
+export interface LoginPayload {
+  email: string;
+  password: string;
+}
+
+export interface AuthResponse {
+  userId: string;
+  accessToken: string;
+  refreshToken: string;
+}
 
 export const authService = {
   async register(payload: RegisterPayload): Promise<AuthResponse> {

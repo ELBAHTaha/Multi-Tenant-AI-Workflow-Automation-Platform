@@ -17,7 +17,10 @@ export class ExecutionsService {
       data: {
         status,
         startedAt: status === ExecutionStatus.RUNNING ? now : undefined,
-        finishedAt: status === ExecutionStatus.SUCCESS || status === ExecutionStatus.FAILED ? now : undefined,
+        finishedAt:
+          status === ExecutionStatus.COMPLETED || status === ExecutionStatus.FAILED
+            ? now
+            : undefined,
       },
     });
   }

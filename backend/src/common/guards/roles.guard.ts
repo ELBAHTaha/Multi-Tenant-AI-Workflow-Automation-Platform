@@ -7,10 +7,14 @@ export class RolesGuard implements CanActivate {
   constructor(private readonly reflector: Reflector) {}
 
   canActivate(context: ExecutionContext): boolean {
-    const requiredRoles = this.reflector.getAllAndOverride<Array<'ADMIN' | 'MEMBER'>>(ROLES_KEY, [context.getHandler(), context.getClass()]);
+    const requiredRoles = this.reflector.getAllAndOverride<
+      Array<'ADMIN' | 'MANAGER' | 'MEMBER'>
+    >(ROLES_KEY, [context.getHandler(), context.getClass()]);
     if (!requiredRoles || requiredRoles.length === 0) return true;
 
-    const request = context.switchToHttp().getRequest<{ user?: { role: 'ADMIN' | 'MEMBER' } }>();
+    const request = context.switchToHttp().getRequest<{
+      user?: { role: 'ADMIN' | 'MANAGER' | 'MEMBER' };
+    }>();
     if (!request.user || !requiredRoles.includes(request.user.role)) throw new ForbiddenException('Insufficient role');
 
     return true;

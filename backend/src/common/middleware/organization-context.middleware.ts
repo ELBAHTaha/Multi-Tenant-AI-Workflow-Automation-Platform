@@ -24,9 +24,15 @@ export class OrganizationContextMiddleware implements NestMiddleware {
     if (payloadB64) {
       try {
         const payloadJson = Buffer.from(payloadB64, 'base64url').toString('utf-8');
-        const payload = JSON.parse(payloadJson) as { organizationId?: string };
+        const payload = JSON.parse(payloadJson) as { organizationId?: string; userId?: string };
         if (payload.organizationId) {
           (req as Request & { organizationId?: string }).organizationId = payload.organizationId;
+          (req as Request & {
+            tenant?: { organizationId: string; userId?: string };
+          }).tenant = {
+            organizationId: payload.organizationId,
+            userId: payload.userId,
+          };
         }
       } catch {
         // JwtAuthGuard performs full verification. Middleware only enriches request context.

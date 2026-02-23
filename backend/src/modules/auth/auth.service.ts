@@ -7,6 +7,7 @@ import { RegisterDto } from './dto/register.dto';
 import { LoginDto } from './dto/login.dto';
 import { UsersService } from '../users/users.service';
 import { OrganizationsService } from '../organizations/organizations.service';
+import { AuditService } from '../audit/audit.service';
 
 interface AuthTokens { accessToken: string; refreshToken: string; }
 
@@ -17,6 +18,7 @@ export class AuthService {
     private readonly configService: ConfigService,
     private readonly usersService: UsersService,
     private readonly organizationsService: OrganizationsService,
+    private readonly auditService: AuditService,
   ) {}
 
   async register(dto: RegisterDto): Promise<{ userId: string } & AuthTokens> {
@@ -33,6 +35,12 @@ export class AuthService {
 
     const tokens = await this.generateTokens({ userId: user.id, email: user.email, role: user.role, organizationId: user.organizationId });
     await this.usersService.updateRefreshToken(user.id, tokens.refreshToken);
+    await this.auditService.log({
+      organizationId: user.organizationId,
+      userId: user.id,
+      action: 'user.registered',
+      metadata: { email: user.email, role: user.role },
+    });
     return { userId: user.id, ...tokens };
   }
 

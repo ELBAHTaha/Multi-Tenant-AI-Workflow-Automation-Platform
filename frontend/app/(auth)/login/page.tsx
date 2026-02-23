@@ -1,17 +1,19 @@
-'use client';
+﻿'use client';
 
 import { FormEvent, useState } from 'react';
+import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { authService } from '../../../services/auth.service';
+import { parseApiError } from '../../../lib/api-error';
 import { useAuthStore } from '../../../store/auth.store';
 
-export default function LoginPage(): JSX.Element {
+export default function LoginPage() {
   const router = useRouter();
   const setTokens = useAuthStore((s) => s.setTokens);
   const [email, setEmail] = useState('admin@example.com');
   const [password, setPassword] = useState('password123');
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  const [error, setError] = useState<{ message: string; details?: unknown } | null>(null);
 
   const onSubmit = async (e: FormEvent<HTMLFormElement>): Promise<void> => {
     e.preventDefault();
@@ -21,7 +23,7 @@ export default function LoginPage(): JSX.Element {
       setTokens(res.accessToken, res.refreshToken);
       router.push('/dashboard');
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Login failed');
+      setError(parseApiError(err));
     } finally { setLoading(false); }
   };
 
@@ -30,8 +32,15 @@ export default function LoginPage(): JSX.Element {
       <form onSubmit={onSubmit} className="grid">
         <label>Email<input value={email} onChange={(e)=>setEmail(e.target.value)} type="email" required /></label>
         <label>Password<input value={password} onChange={(e)=>setPassword(e.target.value)} type="password" minLength={8} required /></label>
-        {error ? <p style={{ color: 'crimson' }}>{error}</p> : null}
+        {error ? (
+          <div style={{ color: 'crimson' }}>
+            <p>{error.message}</p>
+            {error.details ? <pre style={{ whiteSpace: 'pre-wrap' }}>{JSON.stringify(error.details, null, 2)}</pre> : null}
+          </div>
+        ) : null}
         <button type="submit" disabled={loading}>{loading ? 'Logging in...' : 'Login'}</button>
+        <p>No account? <Link href="/register">Register</Link></p>
       </form></div></main>
   );
 }
+

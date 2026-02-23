@@ -3,7 +3,9 @@
 import axios, { AxiosError, AxiosRequestConfig, InternalAxiosRequestConfig } from 'axios';
 import { useAuthStore } from '../store/auth.store';
 
-const api = axios.create({ baseURL: process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost/api' });
+const api = axios.create({
+  baseURL: process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:3003/api',
+});
 
 api.interceptors.request.use((config: InternalAxiosRequestConfig) => {
   const token = useAuthStore.getState().accessToken;
@@ -56,7 +58,10 @@ api.interceptors.response.use(
         return Promise.reject(error);
       }
 
-      const response = await axios.post<{ accessToken: string; refreshToken: string }>(`${process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost/api'}/auth/refresh`, { refreshToken });
+      const response = await axios.post<{ accessToken: string; refreshToken: string }>(
+        `${process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:3003/api'}/auth/refresh`,
+        { refreshToken },
+      );
       const { accessToken, refreshToken: newRefreshToken } = response.data;
       useAuthStore.getState().setTokens(accessToken, newRefreshToken);
       processQueue(null, accessToken);
