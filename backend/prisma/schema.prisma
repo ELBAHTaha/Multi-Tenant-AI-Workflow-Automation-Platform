@@ -1,4 +1,4 @@
-﻿generator client {
+generator client {
   provider = "prisma-client-js"
 }
 
@@ -28,6 +28,7 @@ model Organization {
   users      User[]
   workflows  Workflow[]
   executions WorkflowExecution[]
+
   @@index([name])
 }
 
@@ -41,8 +42,10 @@ model User {
   organizationId   String
   createdAt        DateTime     @default(now())
   updatedAt        DateTime     @updatedAt
+
   organization     Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
   workflowsCreated Workflow[]   @relation("WorkflowCreatedBy")
+
   @@index([organizationId])
   @@index([organizationId, role])
 }
@@ -55,9 +58,11 @@ model Workflow {
   createdById    String
   createdAt      DateTime            @default(now())
   updatedAt      DateTime            @updatedAt
+
   organization   Organization        @relation(fields: [organizationId], references: [id], onDelete: Cascade)
   createdBy      User                @relation("WorkflowCreatedBy", fields: [createdById], references: [id], onDelete: Restrict)
   executions     WorkflowExecution[]
+
   @@index([organizationId])
   @@index([organizationId, createdAt])
 }
@@ -71,9 +76,11 @@ model WorkflowExecution {
   finishedAt     DateTime?
   createdAt      DateTime        @default(now())
   updatedAt      DateTime        @updatedAt
+
   workflow       Workflow        @relation(fields: [workflowId], references: [id], onDelete: Cascade)
   organization   Organization    @relation(fields: [organizationId], references: [id], onDelete: Cascade)
   logs           ExecutionLog[]
+
   @@index([organizationId])
   @@index([workflowId])
   @@index([organizationId, status])
@@ -87,7 +94,9 @@ model ExecutionLog {
   status      ExecutionStatus
   metadata    Json?
   createdAt   DateTime          @default(now())
+
   execution   WorkflowExecution @relation(fields: [executionId], references: [id], onDelete: Cascade)
+
   @@index([executionId])
   @@index([status])
 }

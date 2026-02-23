@@ -1,5 +1,5 @@
-﻿import { Injectable } from '@nestjs/common';
-import { ExecutionStatus, ExecutionLog, WorkflowExecution } from '@prisma/client';
+import { Injectable } from '@nestjs/common';
+import { ExecutionStatus, ExecutionLog, WorkflowExecution, Prisma } from '@prisma/client';
 import { PrismaService } from '../../prisma/prisma.service';
 
 @Injectable()
@@ -29,7 +29,7 @@ export class ExecutionsService {
         stepName: params.stepName,
         message: params.message,
         status: params.status,
-        metadata: params.metadata,
+        metadata: params.metadata as Prisma.InputJsonValue | undefined,
       },
     });
   }

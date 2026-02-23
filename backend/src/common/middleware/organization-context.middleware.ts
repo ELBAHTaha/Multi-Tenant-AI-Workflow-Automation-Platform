@@ -4,7 +4,11 @@ import { Request, Response, NextFunction } from 'express';
 @Injectable()
 export class OrganizationContextMiddleware implements NestMiddleware {
   use(req: Request, _res: Response, next: NextFunction): void {
-    if (req.path.startsWith('/api/auth') || req.path.startsWith('/api/health')) {
+    const requestPath = (req.originalUrl ?? req.url ?? req.path).split('?')[0];
+    const isAuthRoute = /^\/(api\/)?auth(\/|$)/.test(requestPath);
+    const isHealthRoute = /^\/(api\/)?health(\/|$)/.test(requestPath);
+
+    if (isAuthRoute || isHealthRoute) {
       next();
       return;
     }

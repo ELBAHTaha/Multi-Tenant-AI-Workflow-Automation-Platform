@@ -1,4 +1,4 @@
-﻿import { Module } from '@nestjs/common';
+import { Module } from '@nestjs/common';
 import { JwtModule } from '@nestjs/jwt';
 import { WorkflowsController } from './workflows.controller';
 import { WorkflowsService } from './workflows.service';

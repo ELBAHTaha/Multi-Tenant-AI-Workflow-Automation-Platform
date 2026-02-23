@@ -1,1 +1,1 @@
-﻿module.exports = { root: true, extends: ['next/core-web-vitals'] };
+module.exports = { root: true, extends: ['next/core-web-vitals'] };

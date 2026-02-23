@@ -1,4 +1,4 @@
-﻿import { Module } from '@nestjs/common';
+import { Module } from '@nestjs/common';
 import { ExecutionsService } from './executions.service';
 
 @Module({ providers: [ExecutionsService], exports: [ExecutionsService] })

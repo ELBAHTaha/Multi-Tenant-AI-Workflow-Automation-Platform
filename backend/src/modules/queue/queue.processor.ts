@@ -1,4 +1,4 @@
-﻿import { Processor, WorkerHost } from '@nestjs/bullmq';
+import { Processor, WorkerHost } from '@nestjs/bullmq';
 import { Job } from 'bullmq';
 import { ExecutionStatus } from '@prisma/client';
 import { ExecutionsService } from '../executions/executions.service';

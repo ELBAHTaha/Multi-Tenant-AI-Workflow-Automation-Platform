@@ -1,4 +1,4 @@
-﻿import { plainToInstance } from 'class-transformer';
+import { plainToInstance } from 'class-transformer';
 import { IsEnum, IsNotEmpty, IsNumber, IsString, Min, validateSync } from 'class-validator';
 
 enum NodeEnv {

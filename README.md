@@ -1,4 +1,4 @@
-﻿# Multi-Tenant AI Workflow Automation Platform
+# Multi-Tenant AI Workflow Automation Platform
 
 Run:
 1. Copy env: `Copy-Item .env.example .env`

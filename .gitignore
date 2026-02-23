@@ -1,4 +1,4 @@
-﻿node_modules
+node_modules
 .env
 .env.*
 backend/node_modules
@@ -7,3 +7,5 @@ backend/dist
 backend/.nestjs
 frontend/.next
 backend/prisma/migrations
+
+/generated/prisma

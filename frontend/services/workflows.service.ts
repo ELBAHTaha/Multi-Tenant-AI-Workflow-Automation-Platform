@@ -1,4 +1,4 @@
-﻿import { api } from '../lib/api';
+import { api } from '../lib/api';
 
 interface Workflow { id: string; name: string; }
 interface CreateWorkflowPayload { name: string; definition: { nodes: Array<Record<string, unknown>>; edges: Array<Record<string, unknown>> }; }

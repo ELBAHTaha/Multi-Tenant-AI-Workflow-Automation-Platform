@@ -1,4 +1,5 @@
-﻿import { PrismaClient, Role, ExecutionStatus } from '@prisma/client';
+import 'dotenv/config';
+import { PrismaClient, Role, ExecutionStatus } from '@prisma/client';
 import * as bcrypt from 'bcrypt';
 
 async function seed(): Promise<void> {

@@ -1,0 +1,17 @@
+[31m[Nest] 19020  - [39m02/23/2026, 10:13:34 PM [31m  ERROR[39m [38;5;3m[AllExceptionsFilter] [39m[31mRequest failed: POST /api/auth/login[39m
+PrismaClientKnownRequestError: 
+Invalid `this.prisma.user.findUnique()` invocation in
+C:\Users\TaHa\Desktop\Multi-Tenant AI Workflow Automation Platform\backend\dist\modules\users\users.service.js:22:50
+
+  19     this.prisma = prisma;
+  20 }
+  21 create(data) { return this.prisma.user.create({ data }); }
+→ 22 findByEmail(email) { return this.prisma.user.findUnique(
+The table `public.User` does not exist in the current database.
+    at ei.handleRequestError (C:\Users\TaHa\Desktop\Multi-Tenant AI Workflow Automation Platform\backend\node_modules\@prisma\client\runtime\library.js:121:7268)
+    at ei.handleAndLogRequestError (C:\Users\TaHa\Desktop\Multi-Tenant AI Workflow Automation Platform\backend\node_modules\@prisma\client\runtime\library.js:121:6593)
+    at ei.request (C:\Users\TaHa\Desktop\Multi-Tenant AI Workflow Automation Platform\backend\node_modules\@prisma\client\runtime\library.js:121:6300)
+    at async a (C:\Users\TaHa\Desktop\Multi-Tenant AI Workflow Automation Platform\backend\node_modules\@prisma\client\runtime\library.js:130:9551)
+    at async AuthService.login (C:\Users\TaHa\Desktop\Multi-Tenant AI Workflow Automation Platform\backend\dist\modules\auth\auth.service.js:46:22)
+    at async C:\Users\TaHa\Desktop\Multi-Tenant AI Workflow Automation Platform\backend\node_modules\@nestjs\core\router\router-execution-context.js:46:28
+    at async C:\Users\TaHa\Desktop\Multi-Tenant AI Workflow Automation Platform\backend\node_modules\@nestjs\core\router\router-proxy.js:9:17

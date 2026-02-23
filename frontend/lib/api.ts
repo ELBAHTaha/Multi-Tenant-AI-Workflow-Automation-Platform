@@ -1,4 +1,4 @@
-﻿'use client';
+'use client';
 
 import axios, { AxiosError, AxiosRequestConfig, InternalAxiosRequestConfig } from 'axios';
 import { useAuthStore } from '../store/auth.store';
@@ -22,8 +22,16 @@ const processQueue = (error: unknown, token: string | null): void => {
 api.interceptors.response.use(
   (response) => response,
   async (error: AxiosError): Promise<unknown> => {
-    const originalRequest = error.config as AxiosRequestConfig & { _retry?: boolean };
-    if (error.response?.status !== 401 || originalRequest._retry) return Promise.reject(error);
+    const originalRequest = error.config as (AxiosRequestConfig & { _retry?: boolean }) | undefined;
+    const requestUrl = originalRequest?.url ?? '';
+    const isAuthRoute =
+      requestUrl.includes('/auth/login') ||
+      requestUrl.includes('/auth/register') ||
+      requestUrl.includes('/auth/refresh');
+
+    if (!originalRequest || error.response?.status !== 401 || originalRequest._retry || isAuthRoute) {
+      return Promise.reject(error);
+    }
 
     if (isRefreshing) {
       return new Promise((resolve, reject) => {
@@ -43,7 +51,10 @@ api.interceptors.response.use(
 
     try {
       const refreshToken = useAuthStore.getState().refreshToken;
-      if (!refreshToken) throw new Error('Missing refresh token');
+      if (!refreshToken) {
+        useAuthStore.getState().clear();
+        return Promise.reject(error);
+      }
 
       const response = await axios.post<{ accessToken: string; refreshToken: string }>(`${process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost/api'}/auth/refresh`, { refreshToken });
       const { accessToken, refreshToken: newRefreshToken } = response.data;

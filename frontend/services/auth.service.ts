@@ -1,4 +1,4 @@
-﻿import { api } from '../lib/api';
+import { api } from '../lib/api';
 
 interface RegisterPayload { name: string; email: string; password: string; organizationName: string; }
 interface LoginPayload { email: string; password: string; }

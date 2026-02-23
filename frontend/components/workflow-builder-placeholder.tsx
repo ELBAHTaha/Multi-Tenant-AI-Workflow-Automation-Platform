@@ -1,4 +1,4 @@
-﻿'use client';
+'use client';
 
 import { useMemo } from 'react';
 import ReactFlow, { Background, Controls, MiniMap, Node, Edge } from 'reactflow';

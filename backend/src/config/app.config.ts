@@ -1,4 +1,4 @@
-﻿import { registerAs } from '@nestjs/config';
+import { registerAs } from '@nestjs/config';
 
 export const appConfig = registerAs('app', () => ({
   port: Number(process.env.BACKEND_PORT ?? 3001),
